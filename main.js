@@ -90,7 +90,7 @@ function createGuiAndRenderer() {
 
 }
 
-function applyInitialParams(camera, controler, sun, earth) {
+function applyInitialParams(camera, controler, sun, earth) {   
 	camera.position.x = 24.375955763295476;
 	camera.position.y = 6.096897081203575;
 	camera.position.z = 19.341372778210438;
@@ -178,6 +178,7 @@ const main = async function () {
 	var closest = solarSystem.planets[2];
 	var range = 2
 	var targetName = "";
+    
 
 	applyInitialParams(camera, controls, solarSystem.sun, solarSystem.planets[2])
 
@@ -304,6 +305,7 @@ const main = async function () {
 	velControl.add(satellite.vel, "y", -75, 75, 0.0001).name("Velocity Y").listen()
 	velControl.add(satellite.vel, "z", -75, 75, 0.0001).name("Velocity Z").listen()	
 
+	  
 	// set callbacks
 	window.addEventListener('resize', onWindowResize);
 	document.onmousemove = onMouseMove;
@@ -500,6 +502,7 @@ const main = async function () {
 		
 	}
 
+	
 	function zoomIn(zoom) {
 		if (closest != null) {
 			if (closest.name != 'Sun') {
@@ -512,13 +515,13 @@ const main = async function () {
 					timer.vel = 1
 				}
 			}
-
+            
 			if (targetName != closest.name) {
 			
 				controls.target = closest.pos;
 				controls.minDistance = closest.radius*5;
 				controls.update();
-
+            
 				const auxVector = closest.pos.clone().add(camera.position.clone()
 					.sub(closest.pos)
 					.normalize()
