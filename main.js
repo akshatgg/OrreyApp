@@ -25,8 +25,8 @@ function createLabelRenderer() {
 	labelRenderer.domElement.style.color = 'LightGrey'
 	document.body.appendChild(labelRenderer.domElement);
 	return labelRenderer
-
 }
+
 
 function createComposer(scene, camera, renderer) {
 	const params = {
@@ -118,6 +118,7 @@ const updateObjects = function(satellite, planets, gravity, timer, dt) {
 			.multiplyScalar(gravity*planet.mass/(satellite.pos.distanceToSquared(planet.pos)))
 		)
 	}
+
 	
 	satellite.vel.add(satellite.acc.clone().multiplyScalar(dt))
 
@@ -144,7 +145,7 @@ const setArrowToVel = function(satellite, arrow) {
 	arrow.setLength(satellite.vel.clone().length())
 }
 
-const main = async function () {
+ const main = async function () {
 	const generalControls = {
 		gravityConstant: 1,
 		preset: [10.246809049864057, 1.1937240000000011, 4.896345408993087, 0, -0.1, 0, -1],
@@ -164,6 +165,7 @@ const main = async function () {
 		simInitTime: 0
 	};
 
+	
 	const scene = new THREE.Scene();
 	const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.01, 3000);
 
