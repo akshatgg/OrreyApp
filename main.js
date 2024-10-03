@@ -25,8 +25,8 @@ function createLabelRenderer() {
 	labelRenderer.domElement.style.color = 'LightGrey'
 	document.body.appendChild(labelRenderer.domElement);
 	return labelRenderer
-}
 
+}
 
 function createComposer(scene, camera, renderer) {
 	const params = {
@@ -90,7 +90,7 @@ function createGuiAndRenderer() {
 
 }
 
-function applyInitialParams(camera, controler, sun, earth) {   
+function applyInitialParams(camera, controler, sun, earth) {
 	camera.position.x = 24.375955763295476;
 	camera.position.y = 6.096897081203575;
 	camera.position.z = 19.341372778210438;
@@ -118,7 +118,6 @@ const updateObjects = function(satellite, planets, gravity, timer, dt) {
 			.multiplyScalar(gravity*planet.mass/(satellite.pos.distanceToSquared(planet.pos)))
 		)
 	}
-
 	
 	satellite.vel.add(satellite.acc.clone().multiplyScalar(dt))
 
@@ -145,7 +144,7 @@ const setArrowToVel = function(satellite, arrow) {
 	arrow.setLength(satellite.vel.clone().length())
 }
 
- const main = async function () {
+const main = async function () {
 	const generalControls = {
 		gravityConstant: 1,
 		preset: [10.246809049864057, 1.1937240000000011, 4.896345408993087, 0, -0.1, 0, -1],
@@ -165,7 +164,6 @@ const setArrowToVel = function(satellite, arrow) {
 		simInitTime: 0
 	};
 
-	
 	const scene = new THREE.Scene();
 	const camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 0.01, 3000);
 
@@ -180,7 +178,6 @@ const setArrowToVel = function(satellite, arrow) {
 	var closest = solarSystem.planets[2];
 	var range = 2
 	var targetName = "";
-    
 
 	applyInitialParams(camera, controls, solarSystem.sun, solarSystem.planets[2])
 
@@ -307,7 +304,6 @@ const setArrowToVel = function(satellite, arrow) {
 	velControl.add(satellite.vel, "y", -75, 75, 0.0001).name("Velocity Y").listen()
 	velControl.add(satellite.vel, "z", -75, 75, 0.0001).name("Velocity Z").listen()	
 
-	  
 	// set callbacks
 	window.addEventListener('resize', onWindowResize);
 	document.onmousemove = onMouseMove;
@@ -333,9 +329,12 @@ const setArrowToVel = function(satellite, arrow) {
 	scene.add( light );
 
 	var then = 0;
+
 	function animate(now) {
 		requestAnimationFrame(animate);
 
+
+		
 		now *= 0.0005;
 		var deltaTime = now - then;
 		if (!deltaTime) {
@@ -344,6 +343,11 @@ const setArrowToVel = function(satellite, arrow) {
 		}
 		then = now;
 		timer.time += timer.vel * deltaTime;
+
+
+	
+
+
 
 		// switch mode
 		if (modeController.prevMode != modeController.overviewMode){
@@ -453,6 +457,10 @@ const setArrowToVel = function(satellite, arrow) {
 		labelRenderer.render(scene, camera);
 
 		composer.render();
+	// if (targetName != closest.name) {
+	// 		updateTargetName();
+	// 	  }
+		
 
 	};
 
@@ -504,9 +512,32 @@ const setArrowToVel = function(satellite, arrow) {
 		
 	}
 
+
+
+
+
 	
+	// Function to update the target name based on the closest object
+	function updateTargetName() {
+		console.log(closest.name);
+		// targetName = closest.name;
+		// console.log(targetName);
+		
+		const targetNameElement = document.getElementById('targetname');
+		
+		targetNameElement.innerHTML = closest.name;
+		
+			
+		
+	}
+	
+
+
+
+
 	function zoomIn(zoom) {
 		if (closest != null) {
+			
 			if (closest.name != 'Sun') {
 				timer.lastVel = timer.vel;
 				timer.vel = 0
@@ -523,7 +554,7 @@ const setArrowToVel = function(satellite, arrow) {
 				controls.target = closest.pos;
 				controls.minDistance = closest.radius*5;
 				controls.update();
-            
+
 				const auxVector = closest.pos.clone().add(camera.position.clone()
 					.sub(closest.pos)
 					.normalize()
@@ -541,6 +572,7 @@ const setArrowToVel = function(satellite, arrow) {
 				})
 				controls.update();
 				targetName = closest.name;
+				
 			}
 		} else {
 			timer.vel = timer.vel;
@@ -549,7 +581,10 @@ const setArrowToVel = function(satellite, arrow) {
 	}
 
 	function onClick() {
-		zoomIn(3)
+		updateTargetName();
+		zoomIn(3);
+
+	
 	}
 
 	function onWheel() {
