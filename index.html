@@ -156,10 +156,10 @@
     <script type="module" src="./main.js"></script>
     <script>
         const descriptionText = `Welcome to Traveling The Orbits! To start playing with the simulation, click on Galactic Travel, choose a preset (GA stands for Gravity Assist) or set up the satellite's initial parameters and then click launch. You can click and drag to adjust the camera along the focused element and use the mouse wheel to adjust zoom. During Galactic Travel, you can switch between focusing on the satellite or the Earth. Finally, you are able to change the parameters of time passing: choose a different time point or rather the time's passing velocity. You're all set, happy traveling!`;
-
-        // Typewriter effect using setInterval
+    
         function typeWriter(text, speed) {
             const textElement = document.getElementById("typewriterText");
+            if (!textElement) return;  // Ensure the element is loaded
             textElement.innerHTML = "";  // Reset text
             let i = 0;
             const interval = setInterval(() => {
@@ -170,24 +170,12 @@
                 }
             }, speed);
         }
-
-        // Continuous speech synthesis with onend event
-        function readDescription() {
-            const utterance = new SpeechSynthesisUtterance(descriptionText);
-            utterance.lang = 'en-US';
-            utterance.rate = 1;
-            utterance.pitch = 1;
-            utterance.onend = () => {
-                readDescription();  // Loop the speech when it ends
-            };
-            window.speechSynthesis.speak(utterance);
-        }
-
+    
         window.onload = function () {
             typeWriter(descriptionText, 50);
-            readDescription();  // Start continuous reading
         };
     </script>
-</body>
+    
+</body> 
 
 </html>

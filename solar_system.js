@@ -108,6 +108,11 @@ export class SolarSystem {
         )
     }
 
+    getPlanetDescriptionByName(name) {
+        const planet = this.planets.find(planet => planet.name === name);
+        return planet ? planet.description : "Welcome to Traveling The Orbits! To start playing with the simulation, click on Galactic Travel, choose a preset (GA stands for Gravity Assist) or set up the satellite's initial parameters and then click launch. You can click and drag to adjust the camera along the focused element and use the mouse wheel to adjust zoom. During Galactic Travel, you can switch between focusing on the satellite or the Earth. Finally, you are able to change the parameters of time passing: choose a different time point or rather the time's passing velocity. You're all set, happy traveling!";
+    }
+
     getPlanets() {
         return this.planets;
     }
