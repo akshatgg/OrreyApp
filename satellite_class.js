@@ -18,6 +18,7 @@ export class Satellite{
       this.object.scale.set(this.scale, this.scale, this.scale); 
     }
 
+    
     get scl() {
       return this.scale
     }

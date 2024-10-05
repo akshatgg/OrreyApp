@@ -23,7 +23,6 @@ export class Planet {
 
         this.v = v;
         this.orbitComplete = 0;
-
         this.description=description;
     }
 

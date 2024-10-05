@@ -13,6 +13,7 @@ import { Satellite } from './satellite_class.js';
 import { Trail } from "./trail.js";
 import gsap from 'https://cdn.skypack.dev/gsap';
 
+
 var changedPreset = false;
 
 function createLabelRenderer() {
@@ -466,6 +467,8 @@ const main = async function () {
 
 	animate();
 
+	console.log("hi");
+	
 	function onWindowResize() {
 
 		camera.aspect = window.innerWidth / window.innerHeight;
@@ -527,13 +530,14 @@ const main = async function () {
 		
 		targetNameElement.innerHTML = closest.name;
 		
-			
+		
 		
 	}
 	
-
-
-
+	
+	
+	
+	const solarSystemInstance = new SolarSystem(document, scene);
 
 	function zoomIn(zoom) {
 		if (closest != null) {
@@ -581,11 +585,31 @@ const main = async function () {
 	}
 
 	function onClick() {
+		console.log("hi");
+		
 		updateTargetName();
+		// Assuming you have an instance of SolarSystem called solarSystemInstance
+         solarSystemInstance.getAndLogPlanetDescriptionByName('Earth'); // This will log the description of Earth
 		zoomIn(3);
-
+       
 	
+	};
+
+
+
+
+	function getPlanetDescriptionByName(solarSystemInstance, name) {
+		const planet = solarSystemInstance.getPlanets().find(planet => planet.name === name);
+		console.log(planet.description);
+		
+		return planet 
+			? planet.description 
+			: "Welcome to Traveling The Orbits! To start playing with the simulation, click on Galactic Travel, choose a preset (GA stands for Gravity Assist) or set up the satellite's initial parameters and then click launch. You can click and drag to adjust the camera along the focused element and use the mouse wheel to adjust zoom. During Galactic Travel, you can switch between focusing on the satellite or the Earth. Finally, you are able to change the parameters of time passing: choose a different time point or rather the time's passing velocity. You're all set, happy traveling!";
 	}
+
+
+
+
 
 	function onWheel() {
 		let vec1 = camera.position.clone();
