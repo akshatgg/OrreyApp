@@ -123,6 +123,23 @@
         .close:after {
             transform: rotate(-45deg);
         }
+
+        .targer {
+            margin-top: 3px;
+            margin-bottom: 3px;
+            text-decoration: underline;
+        }
+
+        .cont {
+            display: flex;
+            align-items: center; /* Centers the arrow between target name and description */
+        }
+
+        .cont span {
+            margin-left: 10px;
+            margin-right: 10px;
+            visibility: hidden; /* Initially hide the arrow */
+        }
     </style>
 </head>
 
@@ -135,28 +152,26 @@
         </div>
     </nav>
 
-    <div id="gui_container">
-    </div>
+    <div id="gui_container"></div>
     <div id='gameCanvas'>
         <aside class="description" id="desc_box">
             <div id="title_box">
                 <h2> DESCRIPTION </h2>
-                <span id="targetname"></span> <!-- Example target name -->
                 <button class="close" onclick='this.parentNode.parentNode.hidden = "hidden"; return false;'>X</button>
             </div>
 
             <div id="div2">
+                <div class="cont">
+                    <h3 id="targetname" class="targer"></h3>
+                    <span id="arrow">-></span> <!-- Arrow span -->
+                </div>
                 <span id="typewriterText"></span>
             </div>
-
         </aside>
-
     </div>
 
     <script type="module" src="./main.js"></script>
     <script>
-
-        
         function typeWriter(text, speed) {
             const textElement = document.getElementById("typewriterText");
             if (!textElement) return;  // Ensure the element is loaded
@@ -170,22 +185,28 @@
                 }
             }, speed);
         }
-    
-
 
         function Empty() {
             const textEle = document.getElementById("typewriterText");
+            const targetNameEle = document.getElementById("targetname");
+            const arrowEle = document.getElementById("arrow");
+
             if (!textEle || textEle.innerHTML.trim() === "") {
                 const Intro = "Hello, this is our solar system.";
                 typeWriter(Intro, 50);
             }
+
+            if (targetNameEle && targetNameEle.innerHTML.trim() === "") {
+                arrowEle.style.visibility = "hidden";  // Hide arrow if target name is empty
+            } else {
+                arrowEle.style.visibility = "visible"; // Show arrow if target name is not empty
+            }
         }
-    
+
         window.onload = function () {
             Empty();
         };
     </script>
-    
 </body>
 
 </html>
