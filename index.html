@@ -155,7 +155,7 @@
 
     <script type="module" src="./main.js"></script>
     <script>
-        import { SolarSystem } from './solar_system.js';
+      
 
         // Function to type out the description text
         function typeWriter(text, speed) {
@@ -174,12 +174,9 @@
 
         // Window load event to initialize the planet description
         window.onload = function () {
-            const targetname = document.getElementById("targetname").innerHTML; // Get planet name from span tag
-            const planet = SolarSystem.getPlanet(targetname); // Get planet object from SolarSystem
-            if (planet) {
-                const description = planet.description; // Get planet description
+           
                 typeWriter(description, 50); // Type out the description
-            }
+            
         };
     </script>
 </body>

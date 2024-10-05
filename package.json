@@ -1,5 +1,5 @@
 {
-  "type": "module", 
+  "type": "module",
   "devDependencies": {
     "http-server": "^14.1.1",
     "three": "^0.157.0"
@@ -7,5 +7,8 @@
   "dependencies": {
     "dat.gui": "^0.7.9",
     "gsap": "^3.12.2"
+  },
+  "scripts": {
+    "start": "http-server -p 8051"
   }
 }

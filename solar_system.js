@@ -3,11 +3,17 @@ import { BasicOrbit } from './basic_orbit.js';
 
 
 export class SolarSystem {
+
+    static getInstance() {
+        return this.instance;
+    }
+
     constructor(document, scene) {
         const sunscale = 400;
         const scale = 4000;
         const sunRadius =  4.6524e-3 * sunscale; //TODO: Radio multiplicado por 100
 
+        SolarSystem.instance = this;
         // const mercuryRadius = 0.0035*sunRadius*1;
         // const venusRadius = 0.0087*sunRadius*1;
         // const earthRadius = 0.0092*sunRadius*1;
@@ -39,7 +45,7 @@ export class SolarSystem {
         this.currentPosition = 0;
 
         this.sun = new Planet(document, scene, new BasicOrbit(scene, 0, 0, 0, 0, 0x000000),
-            "Sun", 3.5*3.5*1.4*(4*Math.PI*sunRadius*sunRadius/3), sunRadius, "resources/textures/sun_texture.jpg", "The star at the center of our solar system, the Sun is a massive ball of hot, glowing gas.");
+            "Sun", 3.5*3.5*1.4*(4*Math.PI*sunRadius*sunRadius/3), sunRadius, "resources/textures/sun_texture.jpg",0, "The star at the center of our solar system, the Sun is a massive ball of hot, glowing gas.");
 
         this.planets.push(
             new Planet(
@@ -108,15 +114,16 @@ export class SolarSystem {
         )
     }
 
+    
+    getPlanets() {
+        return this.planets;
+    }
+    
     getAndLogPlanetDescriptionByName(name) {
         const planet = this.planets.find(planet => planet.name === name);
         const description = planet ? planet.description : "Planet not found.";
         console.log(description);
         return description;
-    }
-
-    getPlanets() {
-        return this.planets;
     }
 
     move(time) {

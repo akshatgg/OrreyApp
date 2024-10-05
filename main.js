@@ -146,6 +146,7 @@ const setArrowToVel = function(satellite, arrow) {
 }
 
 const main = async function () {
+
 	const generalControls = {
 		gravityConstant: 1,
 		preset: [10.246809049864057, 1.1937240000000011, 4.896345408993087, 0, -0.1, 0, -1],
@@ -537,7 +538,6 @@ const main = async function () {
 	
 	
 	
-	const solarSystemInstance = new SolarSystem(document, scene);
 
 	function zoomIn(zoom) {
 		if (closest != null) {
@@ -583,29 +583,21 @@ const main = async function () {
 			controls.minDistance = 0;
 		}
 	}
-
+	const solarSystemInstance = SolarSystem.getInstance();
+;
+	// const solarSystemInst = new SolarSystem(document, scene);
 	function onClick() {
+		
 		console.log("hi");
 		
 		updateTargetName();
-		// Assuming you have an instance of SolarSystem called solarSystemInstance
-         solarSystemInstance.getAndLogPlanetDescriptionByName('Earth'); // This will log the description of Earth
 		zoomIn(3);
+		solarSystemInstance.getAndLogPlanetDescriptionByName(closest.name); // This will log the description of Earth
        
 	
 	};
 
 
-
-
-	function getPlanetDescriptionByName(solarSystemInstance, name) {
-		const planet = solarSystemInstance.getPlanets().find(planet => planet.name === name);
-		console.log(planet.description);
-		
-		return planet 
-			? planet.description 
-			: "Welcome to Traveling The Orbits! To start playing with the simulation, click on Galactic Travel, choose a preset (GA stands for Gravity Assist) or set up the satellite's initial parameters and then click launch. You can click and drag to adjust the camera along the focused element and use the mouse wheel to adjust zoom. During Galactic Travel, you can switch between focusing on the satellite or the Earth. Finally, you are able to change the parameters of time passing: choose a different time point or rather the time's passing velocity. You're all set, happy traveling!";
-	}
 
 
 
