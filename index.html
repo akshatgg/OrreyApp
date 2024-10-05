@@ -155,17 +155,37 @@
 
     <script type="module" src="./main.js"></script>
     <script>
-      
 
-        // Function to type out the description text
-      
+        
+        function typeWriter(text, speed) {
+            const textElement = document.getElementById("typewriterText");
+            if (!textElement) return;  // Ensure the element is loaded
+            textElement.innerHTML = "";  // Reset text
+            let i = 0;
+            const interval = setInterval(() => {
+                textElement.innerHTML += text.charAt(i);
+                i++;
+                if (i >= text.length) {
+                    clearInterval(interval);  // Stop when the text is fully written
+                }
+            }, speed);
+        }
+    
 
-        // Window load event to initialize the planet description
+
+        function Empty() {
+            const textEle = document.getElementById("typewriterText");
+            if (!textEle || textEle.innerHTML.trim() === "") {
+                const Intro = "Hello, this is our solar system.";
+                typeWriter(Intro, 50);
+            }
+        }
+    
         window.onload = function () {
-                typeWriter(document.getElementById("typewriterText").innerHTML , 50); // Type out the description
-            
+            Empty();
         };
     </script>
+    
 </body>
 
 </html>

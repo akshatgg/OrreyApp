@@ -607,7 +607,7 @@ const main = async function () {
 	const desc = solarSystemInstance.getAndLogPlanetDescriptionByName(closest.name);
 	 
 
- 
+    
 
 
 	function onClick() {
