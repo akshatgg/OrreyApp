@@ -524,8 +524,7 @@ const main = async function () {
 	// Function to update the target name based on the closest object
 	function updateTargetName() {
 		console.log(closest.name);
-		// targetName = closest.name;
-		// console.log(targetName);
+	
 		
 		const targetNameElement = document.getElementById('targetname');
 		
@@ -537,6 +536,9 @@ const main = async function () {
 	
 	
 	
+
+
+
 	
 
 	function zoomIn(zoom) {
@@ -583,16 +585,38 @@ const main = async function () {
 			controls.minDistance = 0;
 		}
 	}
+
+
+
+	function typeWriter(text, speed) {
+		const textElement = document.getElementById("typewriterText");
+		if (!textElement) return;  // Ensure the element is loaded
+		textElement.innerHTML = "";  // Reset text
+		let i = 0;
+		const interval = setInterval(() => {
+			textElement.innerHTML += text.charAt(i);
+			i++;
+			if (i >= text.length) {
+				clearInterval(interval);  // Stop when the text is fully written
+			}
+		}, speed);
+	}
+
+
 	const solarSystemInstance = SolarSystem.getInstance();
-;
-	// const solarSystemInst = new SolarSystem(document, scene);
+	const desc = solarSystemInstance.getAndLogPlanetDescriptionByName(closest.name);
+	 
+
+ 
+
+
 	function onClick() {
 		
 		console.log("hi");
-		
+		console.log(desc)
 		updateTargetName();
+		typeWriter(desc,50);
 		zoomIn(3);
-		solarSystemInstance.getAndLogPlanetDescriptionByName(closest.name); // This will log the description of Earth
        
 	
 	};

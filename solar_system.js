@@ -119,11 +119,19 @@ export class SolarSystem {
         return this.planets;
     }
     
+
+
+	 
+
+
     getAndLogPlanetDescriptionByName(name) {
         const planet = this.planets.find(planet => planet.name === name);
         const description = planet ? planet.description : "Planet not found.";
         console.log(description);
-        return description;
+        // const desc = document.getElementById('typewriterText');
+        // desc.innerHTML = description 
+
+      return description;
     }
 
     move(time) {
@@ -133,3 +141,7 @@ export class SolarSystem {
         }
     } 
 }
+
+
+
+typewriterText
