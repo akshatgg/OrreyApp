@@ -593,6 +593,14 @@ const main = async function () {
 		if (!textElement) return;  // Ensure the element is loaded
 		textElement.innerHTML = "";  // Reset text
 		let i = 0;
+	
+		// Cancel any ongoing speech
+		window.speechSynthesis.cancel();
+	
+		// Speak the new text
+		speakText(text);
+	
+		// Typewriter effect
 		const interval = setInterval(() => {
 			textElement.innerHTML += text.charAt(i);
 			i++;
@@ -601,25 +609,26 @@ const main = async function () {
 			}
 		}, speed);
 	}
-
-
+	
 	const solarSystemInstance = SolarSystem.getInstance();
 	
-	
-    
-	
+	function speakText(text) {
+		const synth = window.speechSynthesis;
+		const utterThis = new SpeechSynthesisUtterance(text);
+		utterThis.lang = 'en-US'; // Set the language
+		synth.speak(utterThis);
+	}
 	
 	function onClick() {
 		const desc = solarSystemInstance.getAndLogPlanetDescriptionByName(closest.name);
 		
 		console.log("hi");
-		console.log(desc)
+		console.log(desc);
 		updateTargetName();
-		typeWriter(desc,50);
-		zoomIn(3);
-       
+		typeWriter(desc, 50); // Start typewriter and speech
+		zoomIn(3); // Perform the zoom action
+	}
 	
-	};
 
 
 
