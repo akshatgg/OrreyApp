@@ -604,13 +604,13 @@ const main = async function () {
 
 
 	const solarSystemInstance = SolarSystem.getInstance();
-	const desc = solarSystemInstance.getAndLogPlanetDescriptionByName(closest.name);
-	 
-
+	
+	
     
-
-
+	
+	
 	function onClick() {
+		const desc = solarSystemInstance.getAndLogPlanetDescriptionByName(closest.name);
 		
 		console.log("hi");
 		console.log(desc)
