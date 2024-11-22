@@ -116,13 +116,14 @@ const updateObjects = function(satellite, planets, gravity, timer, dt) {
 			planet.pos.clone()
 			.sub(satellite.pos)
 			.normalize()
-			.multiplyScalar(gravity*planet.mass/(satellite.pos.distanceToSquared(planet.pos)))
+			.multiplyScalar(gravity*planet.mass/(satellite.pos.distanceToSquared(planet.pos))) 
 		)
+		//a = G*M/r*2
 	}
 	
-	satellite.vel.add(satellite.acc.clone().multiplyScalar(dt))
+	satellite.vel.add(satellite.acc.clone().multiplyScalar(dt)) //del v=a * del t
 
-	satellite.pos.add(satellite.vel.clone().multiplyScalar(dt))
+	satellite.pos.add(satellite.vel.clone().multiplyScalar(dt))// del x=v * del t
 
 	for (const planet of planets) {
 		if (satellite.pos.distanceToSquared(planet.pos) <= planet.radius*planet.radius) {
@@ -144,6 +145,7 @@ const setArrowToVel = function(satellite, arrow) {
 	arrow.setDirection(satellite.vel.clone().normalize())
 	arrow.setLength(satellite.vel.clone().length())
 }
+
 
 const main = async function () {
 
@@ -214,7 +216,7 @@ const main = async function () {
 		controls.minDistance = solarSystem.planets[2].radius*10;
 		controls.update();
 		modeController.changeCamera = false;
-		modeController.travelModeRunning = false
+		modeController.travelModeRunning = false;
 		trail.reset()
 
 		if (typeof generalControls.preset === 'string') {
@@ -255,7 +257,7 @@ const main = async function () {
 				satellite.resetVel = satellite.vel.clone()
 				modeController.travelModeRunning = true 
 				timer.vel = 1
-				// console.log(`[${satellite.pos.x}, ${satellite.pos.y}, ${satellite.pos.z}, ${satellite.vel.x}, ${satellite.vel.y}, ${satellite.vel.z}, ${timer.time}]`);
+				console.log(`[${satellite.pos.x}, ${satellite.pos.y}, ${satellite.pos.z}, ${satellite.vel.x}, ${satellite.vel.y}, ${satellite.vel.z}, ${timer.time}]`);
 			}
 			
 		},
@@ -290,8 +292,8 @@ const main = async function () {
 		"GA on Uranus": [-2.057544383162217, 1.193724000000002, 9.333709430501823, -25.703400000000002, 8.5645, 75, 703.0350093900004],
 		"Double GA": [11.329370589492553, 1.1937240000000005, 1.9826389707195744, 75, -1.5889, -0.31970000000000004, 1000.9074545000001], 
 		"Crash with Saturn": [6.574269213901129, 1.193724000000002, 8.632047447275971, 75, 11.1029, 35.217400000000005, 1004.6308958400011], 
-		"GA on Ceres": [10.96407028527316, 1.1937240000000007, 3.310020108511075, 12.4213, 22.6017, 5.6344, 1.5167150000000218],
-
+		"GAn Ceres": [10.96407028527316, 1.1937240000000007, 3.310020108511075, 12.4213, 22.6017, 5.6344, 1.5167150000000218],
+		
 	})
 	.onFinishChange(
 		function(){
