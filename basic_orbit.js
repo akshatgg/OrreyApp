@@ -15,7 +15,7 @@ export class BasicOrbit{
         this.orbitLine.renderOrder = 1000;
         scene.add(this.orbitLine);
     }
-
+    
     getPoint(t, vector) {
         this.path.getPoint(t, vector);
     }
