@@ -14,7 +14,6 @@
   },
   "scripts": {
     "start": "http-server -p 8051",
-    "build": "vite build --target esnext",
       "deploy": "gh-pages -d dist"
   }
 }
