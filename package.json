@@ -2,13 +2,18 @@
   "type": "module",
   "devDependencies": {
     "http-server": "^14.1.1",
-    "three": "^0.157.0"
+    "three": "^0.157.0",
+    "vite": "^6.0.3",
+    "webpack": "^5.97.1",
+    "webpack-cli": "^5.1.4"
   },
   "dependencies": {
     "dat.gui": "^0.7.9",
     "gsap": "^3.12.2"
   },
-  "scripts": {
-    "start": "http-server -p 8051"
-  }
+"scripts": {
+  "start": "http-server -p 8051",
+  "build": "vite build --target esnext"
+}
+
 }
