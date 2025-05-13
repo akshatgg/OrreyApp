@@ -187,7 +187,7 @@ const main = async function () {
 
 	const satellite = new Satellite(new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, -0.1, 0), 0.06, new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, -0.1, 0));
 	satellite.vel = satellite.resetVel.clone()
-	await satellite.loadModel(scene, "resources/satellite/scene.gltf")
+	await satellite.loadModel(scene, "resources/models/satellite.glb")
 	const trail = new Trail(scene, 100, 0xffffff)
 	var arrowHelper = new THREE.ArrowHelper(satellite.vel.clone().normalize(), satellite.pos.clone(), satellite.vel.clone().length()/10, 0xff0000 );
 	scene.add( arrowHelper );
