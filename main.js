@@ -11,8 +11,10 @@ import { GUI } from "https://cdn.skypack.dev/dat.gui"
 import { SolarSystem } from './solar_system.js';
 import { Satellite } from './satellite_class.js';
 import { Trail } from "./trail.js";
+// import Chatbot from "./chatbot/index.js";
 import gsap from 'https://cdn.skypack.dev/gsap';
-
+// const root = createRoot(document.getElementById('chatbot-root'));
+// root.render(<Chatbot />);
 
 var changedPreset = false;
 

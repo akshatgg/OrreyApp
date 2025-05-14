@@ -9,6 +9,8 @@
 
         body {
             margin: 0;
+            background-color: #121212;
+            color: #fff;
         }
 
         p {
@@ -35,6 +37,7 @@
             line-height: 65px;
             text-align: center;
             z-index: 100000;
+            background-color: rgba(0, 0, 0, 0.7);
         }
 
         .nav div.logo {
@@ -52,6 +55,28 @@
 
         .nav div.logo a:hover {
             color: #a9a9a9;
+        }
+
+        .nav div.chat-toggle {
+            float: right;
+            width: auto;
+            height: auto;
+            padding-right: 3rem;
+        }
+
+        .nav div.chat-toggle button {
+            background: none;
+            border: 2px solid #fff;
+            color: #fff;
+            font-family: 'Space Mono', monospace;
+            padding: 5px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav div.chat-toggle button:hover {
+            background-color: rgba(255, 255, 255, 0.2);
         }
 
         #gameCanvas {
@@ -96,11 +121,13 @@
         }
 
         .close {
-            right: 32px;
-            top: 0px;
             width: 32px;
             height: 32px;
             opacity: 0.3;
+            background: none;
+            border: none;
+            cursor: pointer;
+            position: relative;
         }
 
         .close:hover {
@@ -109,11 +136,12 @@
 
         .close:before,
         .close:after {
+            position: absolute;
             left: 15px;
             content: ' ';
             height: 33px;
             width: 2px;
-            background-color: #333;
+            background-color: #fff;
         }
 
         .close:before {
@@ -132,13 +160,294 @@
 
         .cont {
             display: flex;
-            align-items: center; /* Centers the arrow between target name and description */
+            align-items: center;
         }
 
         .cont span {
             margin-left: 10px;
             margin-right: 10px;
-            visibility: hidden; /* Initially hide the arrow */
+            visibility: hidden;
+        }
+
+        /* Chat Logo Styles */
+        #chat-logo {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 65px;
+            height: 65px;
+            background: linear-gradient(135deg, #4299e1, #2c5282);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4), 0 0 0 5px rgba(66, 153, 225, 0.15);
+            z-index: 999;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        #chat-logo:hover {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5), 0 0 0 8px rgba(66, 153, 225, 0.2);
+        }
+
+        #chat-logo svg {
+            width: 35px;
+            height: 35px;
+            fill: none;
+            stroke: white;
+            stroke-width: 2;
+            filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.2));
+        }
+
+        /* Chat Container Styles */
+        #chatbot-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 350px;
+            height: 500px;
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            display: none;
+            animation: slide-up 0.3s ease;
+            transition: all 0.5s ease-in-out;
+        }
+
+        /* Expanded chat container */
+        #chatbot-container.expanded {
+            width: 80%;
+            height: 80%;
+            max-width: 1000px;
+            max-height: 800px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        @keyframes slide-up {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4), 0 0 0 5px rgba(66, 153, 225, 0.15);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4), 0 0 0 8px rgba(66, 153, 225, 0.2);
+            }
+            100% {
+                transform: scale(1);
+                box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4), 0 0 0 5px rgba(66, 153, 225, 0.15);
+            }
+        }
+
+        #chat-header {
+            padding: 15px;
+            font-family: 'Space Mono', monospace;
+            font-size: 1.2rem;
+            color: #fff;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: rgba(66, 153, 225, 0.7);
+            border-radius: 15px 15px 0 0;
+            backdrop-filter: blur(5px);
+            position: relative;
+        }
+
+        #chat-controls {
+            display: flex;
+            align-items: center;
+        }
+
+        #expand-chat {
+            background: none;
+            border: none;
+            color: white;
+            margin-right: 15px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease;
+        }
+        
+        /* Position the close button on the right edge */
+        #close-chat {
+            position: absolute;
+            right: 15px;
+            top: 15px;
+        }
+
+        #expand-chat:hover {
+            transform: scale(1.1);
+        }
+
+        #expand-chat svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        #chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            scrollbar-width: thin;
+            scrollbar-color: #4299e1 #2d3748;
+        }
+
+        #chat-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        #chat-messages::-webkit-scrollbar-track {
+            background: rgba(45, 55, 72, 0.3);
+            border-radius: 10px;
+        }
+
+        #chat-messages::-webkit-scrollbar-thumb {
+            background-color: rgba(66, 153, 225, 0.7);
+            border-radius: 10px;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.9rem;
+            word-wrap: break-word;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            line-height: 1.4;
+            letter-spacing: 0.3px;
+        }
+
+        .user-message {
+            align-self: flex-end;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-bottom-right-radius: 5px;
+            color: white;
+        }
+
+        .bot-message {
+            align-self: flex-start;
+            background: rgba(45, 55, 72, 0.8);
+            border-bottom-left-radius: 5px;
+            color: #f0f0f0;
+            border-left: 3px solid #4299e1;
+        }
+
+        #chat-input-container {
+            padding: 15px;
+            border-top: 1px solid #444;
+            display: flex;
+        }
+
+        #chat-input {
+            flex: 1;
+            background-color: rgba(45, 55, 72, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff;
+            padding: 12px 18px;
+            border-radius: 20px;
+            font-family: 'Space Mono', monospace;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        #chat-input:focus {
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(66, 153, 225, 0.5);
+            background-color: rgba(58, 74, 94, 0.6);
+        }
+
+        #send-button {
+            background: linear-gradient(135deg, #4299e1, #3182ce);
+            border: none;
+            color: white;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            margin-left: 10px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        #send-button:hover {
+            background: linear-gradient(135deg, #3182ce, #2c5282);
+            transform: scale(1.05) rotate(5deg);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        #send-button svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Typing indicator */
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            align-self: flex-start;
+            background-color: rgba(45, 55, 72, 0.6);
+            padding: 12px 18px;
+            border-radius: 18px;
+            margin-bottom: 15px;
+            border-bottom-left-radius: 5px;
+            border-left: 3px solid #4299e1;
+        }
+
+        .typing-indicator span {
+            height: 8px;
+            width: 8px;
+            margin: 0 2px;
+            background-color: #a0aec0;
+            border-radius: 50%;
+            display: inline-block;
+            opacity: 0.4;
+        }
+
+        .typing-indicator span:nth-child(1) {
+            animation: blink 1s infinite 0.3s;
+        }
+
+        .typing-indicator span:nth-child(2) {
+            animation: blink 1s infinite 0.5s;
+        }
+
+        .typing-indicator span:nth-child(3) {
+            animation: blink 1s infinite 0.7s;
+        }
+
+        @keyframes blink {
+            50% {
+                opacity: 1;
+            }
         }
     </style>
 </head>
@@ -157,48 +466,249 @@
     <div id='gameCanvas'>
         <aside class="description" id="desc_box">
             <div id="title_box">
-                <h2> DESCRIPTION </h2>
+                <h2>DESCRIPTION</h2>
                 <button class="close" onclick='this.parentNode.parentNode.hidden = "hidden"; return false;'>X</button>
             </div>
 
             <div id="div2">
                 <div class="cont">
                     <h3 id="targetname" class="targer"></h3>
-                    <span id="arrow">-></span> <!-- Arrow span -->
+                    <span id="arrow">-></span>
                 </div>
                 <span id="typewriterText"></span>
             </div>
         </aside>
     </div>
 
+    <!-- Chat Logo -->
+    <div id="chat-logo">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <path d="M8 14s1.5 2 4 2 4-2 4-2"></path>
+            <line x1="9" y1="9" x2="9.01" y2="9"></line>
+            <line x1="15" y1="9" x2="15.01" y2="9"></line>
+            <path d="M12 2a7 7 0 0 0-5 11.84 7 7 0 0 0 10 0A7 7 0 0 0 12 2z"></path>
+        </svg>
+    </div>
+
+    <!-- Chatbot Container -->
+    <div id="chatbot-container">
+        <div id="chat-header">
+            <span>Space Assistant</span>
+            <div id="chat-controls">
+                <button id="expand-chat">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M15 3h6v6"></path>
+                        <path d="M9 21H3v-6"></path>
+                        <path d="M21 3l-7 7"></path>
+                        <path d="M3 21l7-7"></path>
+                    </svg>
+                </button>
+            </div>
+            <button class="close" id="close-chat"></button>
+        </div>
+        <div id="chat-messages">
+            <div class="message bot-message">
+                Hello, space explorer! I'm your orbital assistant. How can I help you with your journey through the cosmos today?
+            </div>
+            <div class="message bot-message">
+                You can ask me about orbital mechanics, space exploration, or how to use this simulator.
+            </div>
+        </div>
+        <div id="chat-input-container">
+            <input type="text" id="chat-input" placeholder="Ask about orbital mechanics...">
+            <button id="send-button">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
+            </button>
+        </div>
+    </div>
+
     <script type="module" src="./main.js"></script>
     <script>
+        // API Key Configuration
+        // IMPORTANT: In production, never expose your API key directly in the client-side code
+        // This should be handled by a backend server for security
+        const GEMINI_API_KEY = "AIzaSyAMN0mS5W-UyscY9teuMvFl07ST981FcEo";
+        const GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent";
+
+        // Chat functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatContainer = document.getElementById('chatbot-container');
+            const chatLogo = document.getElementById('chat-logo');
+            const closeChatButton = document.getElementById('close-chat');
+            const expandChatButton = document.getElementById('expand-chat');
+            const chatMessages = document.getElementById('chat-messages');
+            const chatInput = document.getElementById('chat-input');
+            const sendButton = document.getElementById('send-button');
+            
+            // Add pulse animation to chat logo
+            setTimeout(() => {
+                chatLogo.style.animation = "pulse 2s infinite";
+            }, 3000);
+
+            // Toggle chat visibility with logo
+            chatLogo.addEventListener('click', function() {
+                chatContainer.style.display = 'flex';
+                chatInput.focus();
+                chatLogo.style.display = 'none';
+            });
+
+            closeChatButton.addEventListener('click', function() {
+                chatContainer.style.display = 'none';
+                chatLogo.style.display = 'flex';
+                // Reset expanded state when closing
+                chatContainer.classList.remove('expanded');
+                updateExpandIcon();
+            });
+            
+            // Toggle expanded chat state
+            expandChatButton.addEventListener('click', function() {
+                chatContainer.classList.toggle('expanded');
+                updateExpandIcon();
+                // Update chat messages scroll position
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            });
+            
+            // Update expand/collapse icon based on current state
+            function updateExpandIcon() {
+                if (chatContainer.classList.contains('expanded')) {
+                    expandChatButton.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M4 14h6v6"></path>
+                            <path d="M20 10h-6V4"></path>
+                            <path d="M14 10l7-7"></path>
+                            <path d="M3 21l7-7"></path>
+                        </svg>
+                    `;
+                } else {
+                    expandChatButton.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M15 3h6v6"></path>
+                            <path d="M9 21H3v-6"></path>
+                            <path d="M21 3l-7 7"></path>
+                            <path d="M3 21l7-7"></path>
+                        </svg>
+                    `;
+                }
+            }
+
+            // Function to add a new message to the chat
+            function addMessage(content, isUser = false) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = isUser ? 'message user-message' : 'message bot-message';
+                messageDiv.textContent = content;
+                chatMessages.appendChild(messageDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            // Function to show typing indicator
+            function showTypingIndicator() {
+                const indicator = document.createElement('div');
+                indicator.className = 'typing-indicator';
+                indicator.id = 'typing-indicator';
+                for (let i = 0; i < 3; i++) {
+                    const dot = document.createElement('span');
+                    indicator.appendChild(dot);
+                }
+                chatMessages.appendChild(indicator);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            // Function to remove typing indicator
+            function removeTypingIndicator() {
+                const indicator = document.getElementById('typing-indicator');
+                if (indicator) {
+                    indicator.remove();
+                }
+            }
+
+            // Function to send message to Gemini API
+            async function sendToGemini(message) {
+                try {
+                    const response = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            contents: [{
+                                parts: [{
+                                    text: `You are a helpful space and orbital mechanics assistant named Space Assistant. 
+                                    The user is exploring an interactive orbital mechanics simulator.
+                                    Respond to this user question about space, orbits, or the simulator: ${message}`
+                                }]
+                            }]
+                        })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('API request failed');
+                    }
+
+                    const data = await response.json();
+                    return data.candidates[0].content.parts[0].text;
+                } catch (error) {
+                    console.error('Error calling Gemini API:', error);
+                    return "I'm having trouble connecting to my knowledge systems right now. Please try again later.";
+                }
+            }
+
+            // Handle send message
+            async function handleSendMessage() {
+                const message = chatInput.value.trim();
+                if (message) {
+                    // Add user message
+                    addMessage(message, true);
+                    chatInput.value = '';
+                    
+                    // Show typing indicator
+                    showTypingIndicator();
+                    
+                    // Get response from Gemini API
+                    const response = await sendToGemini(message);
+                    
+                    // Remove typing indicator and add bot response
+                    removeTypingIndicator();
+                    addMessage(response);
+                }
+            }
+
+            // Event listeners for sending messages
+            sendButton.addEventListener('click', handleSendMessage);
+            
+            chatInput.addEventListener('keypress', function(event) {
+                if (event.key === 'Enter') {
+                    handleSendMessage();
+                }
+            });
+        });
+
+        // Original typewriter and voice functions
         function typeWriter(text, speed) {
             const textElement = document.getElementById("typewriterText");
-            if (!textElement) return;  // Ensure the element is loaded
-            textElement.innerHTML = "";  // Reset text
+            if (!textElement) return;
+            textElement.innerHTML = "";
            
             let i = 0;
-    
-         
-    
-            // Start typing and speech at the same time
     
             const interval = setInterval(() => {
                 textElement.innerHTML += text.charAt(i);
                 i++;
                 if (i >= text.length) {
-                    clearInterval(interval);  // Stop when the text is fully written
+                    clearInterval(interval);
                 }
             }, speed);
         }
     
         function speakText(text) {
-		const synth = window.speechSynthesis;
-		const utterThis = new SpeechSynthesisUtterance(text);
-		utterThis.lang = 'en-US'; // Set the language
-		synth.speak(utterThis);
-	}
+            const synth = window.speechSynthesis;
+            const utterThis = new SpeechSynthesisUtterance(text);
+            utterThis.lang = 'en-US';
+            synth.speak(utterThis);
+        }
     
         function Empty() {
             const textEle = document.getElementById("typewriterText");
@@ -208,18 +718,21 @@
             if (!textEle || textEle.innerHTML.trim() === "") {
                 const Intro = "Welcome to Traveling The Orbits! To start playing with the simulation, click on Galactic Travel, choose a preset (GA stands for Gravity Assist) or set up the satellite's initial parameters and then click launch. You can click and drag to adjust the camera along the focused element and use the mouse wheel to adjust zoom. During Galactic Travel, you can switch between focusing on the satellite or the Earth. Finally, you are able to change the parameters of time passing: choose a different time point or rather the time's passing velocity. You're all set, happy traveling!";
                 speakText(Intro);
-                typeWriter(Intro, 50);  // Type and speak the intro
+                typeWriter(Intro, 50);
             }
     
             if (targetNameEle && targetNameEle.innerHTML.trim() === "") {
-                arrowEle.style.visibility = "hidden";  // Hide arrow if target name is empty
+                arrowEle.style.visibility = "hidden";
             } else {
-                arrowEle.style.visibility = "visible"; // Show arrow if target name is not empty
+                arrowEle.style.visibility = "visible";
             }
         }
     
         window.onload = function () {
             Empty();
+            // Initialize chat container and logo
+            document.getElementById('chatbot-container').style.display = 'none';
+            document.getElementById('chat-logo').style.display = 'flex';
         };
     </script>
     
