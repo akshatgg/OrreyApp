@@ -270,7 +270,6 @@
             background-color: rgba(66, 153, 225, 0.7);
             border-radius: 15px 15px 0 0;
             backdrop-filter: blur(5px);
-            position: relative;
         }
 
         #chat-controls {
@@ -282,7 +281,6 @@
             background: none;
             border: none;
             color: white;
-            margin-right: 15px;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -290,13 +288,6 @@
             transition: transform 0.3s ease;
         }
         
-        /* Position the close button on the right edge */
-        #close-chat {
-            position: absolute;
-            right: 15px;
-            top: 15px;
-        }
-
         #expand-chat:hover {
             transform: scale(1.1);
         }
@@ -304,6 +295,40 @@
         #expand-chat svg {
             width: 18px;
             height: 18px;
+        }
+        
+        /* Chatbot close button styles */
+        #close-chat {
+            width: 24px;
+            height: 24px;
+            opacity: 0.7;
+            background: none;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            margin-left: 10px;
+        }
+
+        #close-chat:hover {
+            opacity: 1;
+        }
+
+        #close-chat:before,
+        #close-chat:after {
+            position: absolute;
+            left: 12px;
+            content: ' ';
+            height: 24px;
+            width: 2px;
+            background-color: #fff;
+        }
+
+        #close-chat:before {
+            transform: rotate(45deg);
+        }
+
+        #close-chat:after {
+            transform: rotate(-45deg);
         }
 
         #chat-messages {
@@ -504,8 +529,8 @@
                         <path d="M3 21l7-7"></path>
                     </svg>
                 </button>
+                <button id="close-chat"></button>
             </div>
-            <button class="close" id="close-chat"></button>
         </div>
         <div id="chat-messages">
             <div class="message bot-message">
