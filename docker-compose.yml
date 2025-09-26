@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  orrey-app:
+    build: .
+    ports:
+      - "8051:8051"
+    container_name: orrey-app
+    restart: unless-stopped
+    volumes:
+      - .:/app
+      - /app/node_modules
