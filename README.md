@@ -2,6 +2,22 @@
 
 An interactive 3D orbital mechanics simulator that allows users to explore space travel, satellite trajectories, and orbital dynamics. The project features a comprehensive solar system simulation with gravity assist maneuvers, real-time orbital calculations, and an AI-powered space assistant chatbot.
 
+## 📖 Quick Navigation
+
+- **🚀 [Quick Start](#-quick-start)** - Get up and running in minutes
+- **📚 [Documentation & Research](#-documentation--research)** - Complete technical guides and scientific data
+- **🔧 [Configuration](#-configuration)** - API keys and customization
+- **🐳 [Docker Setup](#-docker-details)** - Containerized deployment
+- **🔗 [Useful Links](#-useful-links)** - External resources and references
+
+## 📋 Project Documentation
+
+| Document | Purpose | Location |
+|----------|---------|----------|
+| **README.md** | Project overview, setup guide | `./README.md` (this file) |
+| **TECHNICAL_DOCUMENTATION.md** | Complete technical implementation guide | [`./TECHNICAL_DOCUMENTATION.md`](./TECHNICAL_DOCUMENTATION.md) |
+| **NASA_ISAC.ipynb** | Research paper with scientific data & analysis | [`./NASA_ISAC.ipynb`](./NASA_ISAC.ipynb) |
+
 ## 🚀 Features
 
 - **Interactive 3D Solar System**: Visualize planets, satellites, and their orbital paths
@@ -85,26 +101,28 @@ Before running this project, make sure you have:
 
 ```
 OrreyApp/
-├── 📄 index.html              # Main HTML file with embedded styles
-├── 📄 main.js                 # Main application entry point
-├── 📄 solar_system.js         # Solar system simulation logic
-├── 📄 planet.js               # Planet class definitions
-├── 📄 satellite_class.js      # Satellite physics and controls
-├── 📄 trail.js                # Orbital trail visualization
-├── 📄 basic_orbit.js          # Basic orbital mechanics
-├── 📄 styles.css              # Additional styling
-├── 📁 chatbot/                # AI chatbot implementation
-│   ├── 📄 index.js            # Chatbot main logic
-│   ├── 📄 chatbot.js          # Core chatbot functionality
-│   ├── 📁 components/         # React-like chatbot components
-│   ├── 📁 hooks/              # Custom hooks for API integration
-│   └── 📁 styles/             # Chatbot-specific styles
-├── 📁 resources/              # Static assets and resources
-├── 📁 dist/                   # Built files for production
-├── 📄 package.json            # Node.js dependencies and scripts
-├── 📄 Dockerfile              # Docker configuration
-├── 📄 docker-compose.yml      # Docker Compose configuration
-└── 📄 NASA_ISAC.ipynb         # Jupyter notebook with research data
+├── 📄 index.html                     # Main HTML file with embedded styles
+├── 📄 main.js                        # Main application entry point
+├── 📄 solar_system.js                # Solar system simulation logic
+├── 📄 planet.js                      # Planet class definitions
+├── 📄 satellite_class.js             # Satellite physics and controls
+├── 📄 trail.js                       # Orbital trail visualization
+├── 📄 basic_orbit.js                 # Basic orbital mechanics
+├── 📄 styles.css                     # Additional styling
+├── 📁 chatbot/                       # AI chatbot implementation
+│   ├── 📄 index.js                   # Chatbot main logic
+│   ├── 📄 chatbot.js                 # Core chatbot functionality
+│   ├── 📁 components/                # React-like chatbot components
+│   ├── 📁 hooks/                     # Custom hooks for API integration
+│   └── 📁 styles/                    # Chatbot-specific styles
+├── 📁 resources/                     # Static assets and resources
+├── 📁 dist/                          # Built files for production
+├── 📄 package.json                   # Node.js dependencies and scripts
+├── 📄 Dockerfile                     # Docker configuration
+├── 📄 docker-compose.yml             # Docker Compose configuration
+├── 📄 README.md                      # Project overview and setup guide
+├── 📄 TECHNICAL_DOCUMENTATION.md     # Complete technical documentation
+└── 📄 NASA_ISAC.ipynb                # Research paper and data analysis
 ```
 
 ## 🎮 How to Use
@@ -131,6 +149,114 @@ OrreyApp/
 - **Chat Icon**: Click the floating chat button (bottom-right) to open the space assistant
 - **Ask Questions**: Get help with orbital mechanics, space exploration, or simulator usage
 - **Expand Chat**: Use the expand button for a larger chat interface
+
+## 📚 Documentation & Research
+
+This project includes comprehensive documentation and research materials to help users understand the implementation and scientific background.
+
+### 📖 Technical Documentation
+
+**Location**: [`TECHNICAL_DOCUMENTATION.md`](./TECHNICAL_DOCUMENTATION.md)
+
+A complete technical guide covering:
+
+- **System Architecture** - High-level design and component interactions
+- **Technology Stack** - Detailed breakdown of all libraries and frameworks used
+- **Physics Engine** - Mathematical implementation of orbital mechanics
+- **Data Flow** - How information moves through the application
+- **API Integration** - Google Gemini AI assistant implementation
+- **Component Analysis** - In-depth code explanations
+- **Deployment Guide** - Docker and cloud deployment instructions
+- **Development Guidelines** - Best practices and coding standards
+- **Troubleshooting** - Common issues and solutions
+
+**Key Sections Include:**
+```
+1. Project Overview & Features
+2. Complete Technology Stack Analysis
+3. System Architecture Diagrams
+4. Real-time Data Flow Pipeline
+5. Installation & Setup Instructions
+6. Google Gemini API Integration
+7. N-Body Physics Engine Details
+8. File Structure & Component Analysis
+9. Docker Deployment Guide
+10. Performance Optimization
+11. Security Considerations
+12. Development Best Practices
+```
+
+### 🔬 Research Paper & Data Analysis
+
+**Location**: [`NASA_ISAC.ipynb`](./NASA_ISAC.ipynb)
+
+A Jupyter notebook containing scientific research and data analysis:
+
+**Research Components:**
+- **Astronomical Data** - Real planetary parameters and orbital mechanics
+- **Mathematical Models** - Kepler's laws and gravitational physics implementation
+- **Data Visualization** - Graphs and charts of orbital trajectories
+- **Performance Analysis** - Simulation accuracy and computational efficiency
+- **Case Studies** - Famous space missions and gravity assist maneuvers
+- **Educational Content** - Interactive lessons on orbital mechanics
+
+**Scientific Data Sources:**
+- NASA JPL (Jet Propulsion Laboratory) ephemeris data
+- International Astronomical Union (IAU) planetary constants
+- ESA (European Space Agency) mission data
+- Real spacecraft trajectory calculations
+
+**Notebook Sections:**
+```python
+# 1. Data Import and Preprocessing
+# 2. Planetary Physics Calculations
+# 3. Orbital Mechanics Visualization
+# 4. Gravity Assist Analysis
+# 5. Mission Trajectory Planning
+# 6. Performance Benchmarking
+# 7. Educational Demonstrations
+```
+
+### 📊 How to Use the Documentation
+
+#### **For Developers:**
+1. **Start with**: `README.md` (this file) for quick setup
+2. **Deep dive**: `TECHNICAL_DOCUMENTATION.md` for implementation details
+3. **Research**: `NASA_ISAC.ipynb` for scientific background
+
+#### **For Students/Researchers:**
+1. **Scientific basis**: `NASA_ISAC.ipynb` for mathematical foundations
+2. **Implementation**: `TECHNICAL_DOCUMENTATION.md` for code understanding
+3. **Practical use**: `README.md` for hands-on exploration
+
+#### **For Educators:**
+1. **Lesson planning**: `NASA_ISAC.ipynb` for curriculum content
+2. **Technical setup**: `README.md` and `TECHNICAL_DOCUMENTATION.md`
+3. **Interactive demos**: Use the live application with students
+
+### 🎯 Documentation Features
+
+- **Comprehensive Coverage** - Every aspect of the project is documented
+- **Multiple Formats** - Markdown for technical docs, Jupyter for research
+- **Visual Diagrams** - Architecture and data flow illustrations
+- **Code Examples** - Practical implementation snippets
+- **Scientific Accuracy** - Real astronomical data and physics
+- **Educational Value** - Suitable for learning orbital mechanics
+- **Deployment Ready** - Production deployment instructions
+
+### 📝 Contributing to Documentation
+
+To improve or update the documentation:
+
+1. **Technical Docs**: Edit `TECHNICAL_DOCUMENTATION.md` directly
+2. **Research Content**: Use Jupyter to modify `NASA_ISAC.ipynb`
+3. **General Info**: Update this `README.md` file
+
+```bash
+# Generate PDF documentation (optional)
+# Open TECHNICAL_DOCUMENTATION.md in browser and print to PDF
+# Or use pandoc: pandoc TECHNICAL_DOCUMENTATION.md -o docs.pdf
+```
 
 ## 🔧 Configuration
 
@@ -179,10 +305,24 @@ This project is open source. Please check the repository for license details.
 
 ## 🔗 Useful Links
 
-- [Three.js Documentation](https://threejs.org/docs/)
-- [GSAP Documentation](https://greensock.com/docs/)
-- [Google Gemini API](https://ai.google.dev/)
-- [Docker Documentation](https://docs.docker.com/)
+### 📖 Project Documentation
+- [Technical Documentation](./TECHNICAL_DOCUMENTATION.md) - Complete implementation guide
+- [Research Paper & Data](./NASA_ISAC.ipynb) - Scientific analysis and astronomical data
+- [Project README](./README.md) - This file with setup instructions
+
+### 🌐 External Resources
+- [Three.js Documentation](https://threejs.org/docs/) - 3D graphics library
+- [GSAP Documentation](https://greensock.com/docs/) - Animation library
+- [dat.GUI Documentation](https://github.com/dataarts/dat.gui) - UI controls library
+- [Google Gemini API](https://ai.google.dev/) - AI chatbot integration
+- [Docker Documentation](https://docs.docker.com/) - Containerization
+- [Vite Documentation](https://vitejs.dev/) - Build tool
+- [Vercel Deployment](https://vercel.com/docs) - Cloud deployment platform
+
+### 🚀 Space & Orbital Mechanics
+- [NASA JPL Ephemeris](https://ssd.jpl.nasa.gov/horizons/) - Real planetary data
+- [ESA Mission Archives](https://www.esa.int/Science_Exploration) - Space mission data
+- [Orbital Mechanics Fundamentals](https://en.wikipedia.org/wiki/Orbital_mechanics) - Educational resource
 
 ## 🆘 Troubleshooting
 
