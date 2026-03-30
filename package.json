@@ -14,8 +14,8 @@
   },
   "scripts": {
     "start": "vite --port 8051",
-    "build": "vite build --target esnext",
-      "deploy": "gh-pages -d dist"
+    "build": "vite build && cp -r resources dist/",
+    "deploy": "gh-pages -d dist"
   }
 
 }
