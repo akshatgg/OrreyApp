@@ -125,13 +125,15 @@ export class SolarSystem {
 
 
     getAndLogPlanetDescriptionByName(name) {
-        const planet = this.planets.find(planet => planet.name === name);
-        const description = planet ? planet.description : "Planet not found.";
+        let body;
+        if (this.sun && this.sun.name === name) {
+            body = this.sun;
+        } else {
+            body = this.planets.find(planet => planet.name === name);
+        }
+        const description = body ? body.description : "Planet not found.";
         console.log(description);
-        // const desc = document.getElementById('typewriterText');
-        // desc.innerHTML = description 
-
-      return description;
+        return description;
     }
 
     move(time) {

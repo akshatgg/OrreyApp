@@ -5,8 +5,8 @@ const useGeminiAPI = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Your Gemini API key
-  const API_KEY = "AIzaSyAMN0mS5W-UyscY9teuMvFl07ST981FcEo";
+  // API key loaded from environment
+  const API_KEY = import.meta.env?.VITE_GEMINI_API_KEY || "";
   
   const sendMessageToGemini = async (message) => {
     setLoading(true);

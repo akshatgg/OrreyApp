@@ -594,33 +594,35 @@ const main = async function () {
 
 	function typeWriter(text, speed) {
 		const textElement = document.getElementById("typewriterText");
-		if (!textElement) return;  // Ensure the element is loaded
-		textElement.innerHTML = "";  // Reset text
+		if (!textElement) return;
+
+		// Clear ANY running typewriter (shared with index.html via window)
+		if (window.__twInterval) {
+			clearInterval(window.__twInterval);
+			window.__twInterval = null;
+		}
+		textElement.innerHTML = "";
 		let i = 0;
-	
-		// Cancel any ongoing speech
-		window.speechSynthesis.cancel();
-	
-		// Speak the new text
+
 		speakText(text);
-	
-		// Typewriter effect
-		const interval = setInterval(() => {
+
+		window.__twInterval = setInterval(() => {
 			textElement.innerHTML += text.charAt(i);
 			i++;
 			if (i >= text.length) {
-				clearInterval(interval);  // Stop when the text is fully written
+				clearInterval(window.__twInterval);
+				window.__twInterval = null;
 			}
 		}, speed);
 	}
-	
+
 	const solarSystemInstance = SolarSystem.getInstance();
-	
+
+	// Use the shared global speakText from index.html
 	function speakText(text) {
-		const synth = window.speechSynthesis;
-		const utterThis = new SpeechSynthesisUtterance(text);
-		utterThis.lang = 'en-US'; // Set the language
-		synth.speak(utterThis);
+		if (window.__speakText) {
+			window.__speakText(text);
+		}
 	}
 	
 	function onClick() {
