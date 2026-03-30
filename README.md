@@ -1,10 +1,13 @@
 # 🌌 Traveling the Orbits - Interactive Solar System Simulator
 
-An interactive 3D orbital mechanics simulator that allows users to explore space travel, satellite trajectories, and orbital dynamics. The project features a comprehensive solar system simulation with gravity assist maneuvers, real-time orbital calculations, and an AI-powered space assistant chatbot.
+> **Live Demo**: [https://akshatgg.github.io/OrreyApp/](https://akshatgg.github.io/OrreyApp/)
+
+An interactive 3D orbital mechanics simulator that allows users to explore space travel, satellite trajectories, and orbital dynamics. The project features a comprehensive solar system simulation with gravity assist maneuvers, real-time orbital calculations, a gravitational field visualization, and an AI-powered space assistant chatbot.
 
 ## 📖 Quick Navigation
 
 - **🚀 [Quick Start](#-quick-start)** - Get up and running in minutes
+- **🌐 [Gravitational Field Visualization](#-gravitational-field-visualization)** - Spacetime curvature grid
 - **📚 [Documentation & Research](#-documentation--research)** - Complete technical guides and scientific data
 - **🔧 [Configuration](#-configuration)** - API keys and customization
 - **🐳 [Docker Setup](#-docker-details)** - Containerized deployment
@@ -16,6 +19,7 @@ An interactive 3D orbital mechanics simulator that allows users to explore space
 |----------|---------|----------|
 | **README.md** | Project overview, setup guide | `./README.md` (this file) |
 | **TECHNICAL_DOCUMENTATION.md** | Complete technical implementation guide | [`./TECHNICAL_DOCUMENTATION.md`](./TECHNICAL_DOCUMENTATION.md) |
+| **GRAVITY_FIELD_README.md** | Gravitational field visualization docs | [`./GRAVITY_FIELD_README.md`](./GRAVITY_FIELD_README.md) |
 | **NASA_ISAC.ipynb** | Research paper with scientific data & analysis | [`./NASA_ISAC.ipynb`](./NASA_ISAC.ipynb) |
 
 ## 🚀 Features
@@ -23,7 +27,8 @@ An interactive 3D orbital mechanics simulator that allows users to explore space
 - **Interactive 3D Solar System**: Visualize planets, satellites, and their orbital paths
 - **Orbital Mechanics Simulation**: Real-time physics calculations for realistic space travel
 - **Gravity Assist Maneuvers**: Pre-configured scenarios for complex space missions
-- **AI Space Assistant**: Integrated chatbot powered by Google's Gemini API for space-related questions
+- **Gravitational Field Visualization**: Real-time spacetime curvature grid showing gravity wells around all celestial bodies
+- **AI Space Assistant**: Integrated chatbot powered by Groq/Gemini API for space-related questions
 - **Dynamic Camera Controls**: Click and drag to adjust view, mouse wheel for zoom
 - **Time Controls**: Adjust simulation speed and time parameters
 - **Trail Visualization**: Track satellite and celestial body movements
@@ -88,14 +93,31 @@ Before running this project, make sure you have:
 4. **Access the application**:
    Open your browser and navigate to `http://localhost:8051`
 
-### Option 3: Building for Production
+### Option 3: GitHub Pages (Live Deployment)
+
+The app is deployed automatically via GitHub Actions on every push to `main`.
+
+**Live URL**: [https://akshatgg.github.io/OrreyApp/](https://akshatgg.github.io/OrreyApp/)
+
+To deploy manually:
+```bash
+npm run build       # Builds to dist/ with resources
+git push origin main # GitHub Actions deploys automatically
+```
+
+GitHub Pages setup:
+1. Go to repo **Settings > Pages**
+2. Set Source to **GitHub Actions**
+3. Pushes to `main` trigger automatic build and deploy
+
+### Option 4: Building for Production
 
 1. **Build the project**:
    ```bash
    npm run build
    ```
 
-2. **Deploy the `dist` folder** to your web server
+2. **Deploy the `dist` folder** to any static hosting (Netlify, Vercel, etc.)
 
 ## 📁 Project Structure
 
@@ -108,6 +130,9 @@ OrreyApp/
 ├── 📄 satellite_class.js             # Satellite physics and controls
 ├── 📄 trail.js                       # Orbital trail visualization
 ├── 📄 basic_orbit.js                 # Basic orbital mechanics
+├── 📄 gravity_field.js               # Gravitational field visualization
+├── 📄 space-agent.js                 # AI space assistant (Groq/Gemini)
+├── 📄 vite.config.js                 # Vite build config with GitHub Pages base path
 ├── 📄 styles.css                     # Additional styling
 ├── 📁 chatbot/                       # AI chatbot implementation
 │   ├── 📄 index.js                   # Chatbot main logic
@@ -116,11 +141,11 @@ OrreyApp/
 │   ├── 📁 hooks/                     # Custom hooks for API integration
 │   └── 📁 styles/                    # Chatbot-specific styles
 ├── 📁 resources/                     # Static assets and resources
-├── 📁 dist/                          # Built files for production
 ├── 📄 package.json                   # Node.js dependencies and scripts
 ├── 📄 Dockerfile                     # Docker configuration
 ├── 📄 docker-compose.yml             # Docker Compose configuration
 ├── 📄 README.md                      # Project overview and setup guide
+├── 📄 GRAVITY_FIELD_README.md        # Gravitational field visualization docs
 ├── 📄 TECHNICAL_DOCUMENTATION.md     # Complete technical documentation
 └── 📄 NASA_ISAC.ipynb                # Research paper and data analysis
 ```
@@ -149,6 +174,71 @@ OrreyApp/
 - **Chat Icon**: Click the floating chat button (bottom-right) to open the space assistant
 - **Ask Questions**: Get help with orbital mechanics, space exploration, or simulator usage
 - **Expand Chat**: Use the expand button for a larger chat interface
+
+## 🌐 Gravitational Field Visualization
+
+A real-time spacetime curvature visualization that renders a wireframe grid on the orbital plane. The grid warps downward around celestial bodies, creating visible gravity wells — the classic general relativity "rubber sheet" analogy.
+
+For full technical details, see [`GRAVITY_FIELD_README.md`](./GRAVITY_FIELD_README.md).
+
+### How It Works
+
+Each frame, every vertex on the grid computes the combined gravitational potential from all 13 celestial bodies using the formula `phi = SUM(log(1 + Mass / Distance))`. Vertices displace downward proportional to the field strength, creating visible "dips" around massive objects. The wireframe colors shift from dark purple (flat) to glowing cyan/white (deep wells), interacting with the bloom post-processing for a natural glow effect.
+
+### Grid Specifications
+
+| Parameter | Value | Description |
+|-----------|-------|-------------|
+| Grid Size | 250 units | Covers -125 to +125 from Sun (adjustable up to 700) |
+| Segments | 150 x 150 | Number of subdivisions per axis |
+| Total Vertices | 22,801 | (151 x 151) grid intersection points |
+| Total Grid Cells | 22,500 | Individual wireframe squares |
+| Grid Gap | ~1.67 units | Distance between adjacent vertices |
+
+### Planet Coverage
+
+| Planet | Distance (units) | Visible on Grid |
+|--------|-------------------|-----------------|
+| Mercury | ~3.9 | Yes |
+| Venus | ~7.2 | Yes |
+| Earth | ~10 | Yes |
+| Mars | ~15 | Yes |
+| Ceres | ~27 | Yes |
+| Jupiter | ~52 | Yes |
+| Saturn | ~96 | Yes |
+| Uranus | ~192 | Extend grid to 400+ |
+| Neptune | ~300 | Extend grid to 600+ |
+
+### Controls
+
+The gravity field can be toggled **ON/OFF** in two ways (both stay in sync):
+
+1. **Navbar Button** — "Gravity Field" button in the top navigation bar (glows when active)
+2. **GUI Checkbox** — "Show Field" in the Gravity Field folder (top-right panel)
+
+| Control | Range | Default | Description |
+|---------|-------|---------|-------------|
+| Show Field | on / off | off | Toggle visibility |
+| Well Depth | 0.5 - 10.0 | 2.0 | Exaggeration of well displacement |
+| Opacity | 0.1 - 1.0 | 0.7 | Grid transparency |
+| Grid Size | 40 - 700 | 250 | Coverage area in world units |
+
+### Color Gradient
+
+| Field Strength | Color | Effect |
+|---------------|-------|--------|
+| Flat (no gravity) | Near-black purple | Invisible — below bloom threshold |
+| Weak field | Dark teal | Faint glow |
+| Medium field | Bright cyan | Blooms visibly |
+| Deep well center | White | Strong bloom glow |
+
+### Performance
+
+- ~296,000 distance calculations per frame across 22,801 vertices and 13 bodies
+- Estimated ~1-3ms CPU time per frame (well within 60fps budget)
+- Entire computation skipped when field is toggled OFF
+
+---
 
 ## 📚 Documentation & Research
 
