@@ -2,11 +2,12 @@ import * as THREE from "https://cdn.skypack.dev/three@0.129.0/build/three.module
 import { CSS2DObject } from "https://cdn.skypack.dev/three@0.129.0/examples/jsm/renderers/CSS2DRenderer.js";
 
 export class Planet {
-    constructor(document, scene, orbit, name, mass, radius, texturePath, v, description){
+    constructor(document, scene, orbit, name, mass, radius, texturePath, v, description, stats){
         this.name = name;
         this.orbit = orbit;
         this.radius = radius;
         this.mass = mass
+        this.stats = stats || null;
         //initializing material
         
         this.material = new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load(texturePath) });

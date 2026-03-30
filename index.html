@@ -79,6 +79,37 @@
             background-color: rgba(255, 255, 255, 0.2);
         }
 
+        .nav div.gravity-toggle {
+            float: right;
+            width: auto;
+            height: auto;
+            padding-right: 1.5rem;
+            line-height: 65px;
+        }
+
+        .nav div.gravity-toggle button {
+            background: none;
+            border: 2px solid #00ced1;
+            color: #00ced1;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.8rem;
+            padding: 5px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav div.gravity-toggle button:hover {
+            background-color: rgba(0, 206, 209, 0.2);
+        }
+
+        .nav div.gravity-toggle button.active {
+            background: linear-gradient(135deg, rgba(0, 206, 209, 0.4), rgba(138, 43, 226, 0.4));
+            border-color: #fff;
+            color: #fff;
+            box-shadow: 0 0 12px rgba(0, 206, 209, 0.5);
+        }
+
         #gameCanvas {
             position: relative;
         }
@@ -500,6 +531,73 @@
             0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
             30% { transform: translateY(-6px); opacity: 1; }
         }
+
+        /* ─── PLANET HOVER TOOLTIP ─── */
+        #planet-tooltip {
+            position: fixed;
+            pointer-events: none;
+            z-index: 10000;
+            background: linear-gradient(165deg, rgba(12, 10, 35, 0.92), rgba(20, 15, 50, 0.95));
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(100, 70, 200, 0.25);
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-family: 'Space Mono', monospace;
+            color: rgba(230, 225, 255, 0.95);
+            box-shadow:
+                0 8px 32px rgba(0, 0, 0, 0.4),
+                0 0 20px rgba(80, 50, 180, 0.1);
+            opacity: 0;
+            transform: translateY(6px);
+            transition: opacity 0.2s ease, transform 0.2s ease;
+            max-width: 220px;
+        }
+
+        #planet-tooltip.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        #planet-tooltip .tooltip-name {
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid rgba(100, 70, 200, 0.2);
+            text-transform: uppercase;
+        }
+
+        #planet-tooltip .tooltip-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.68rem;
+            padding: 2px 0;
+            gap: 12px;
+        }
+
+        #planet-tooltip .tooltip-label {
+            color: rgba(160, 150, 200, 0.6);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        #planet-tooltip .tooltip-value {
+            color: rgba(200, 180, 255, 0.95);
+            font-weight: 700;
+        }
+
+        #planet-tooltip .tooltip-type {
+            margin-top: 6px;
+            padding-top: 6px;
+            border-top: 1px solid rgba(100, 70, 200, 0.15);
+            font-size: 0.62rem;
+            color: rgba(140, 120, 220, 0.7);
+            text-align: center;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+        }
     </style>
 </head>
 
@@ -508,6 +606,9 @@
         <div class="container">
             <div class="logo">
                 <a href="#" onclick='document.getElementById("desc_box").hidden = ""'>Traveling the Orbits</a>
+            </div>
+            <div class="gravity-toggle">
+                <button id="gravityToggleBtn" onclick="toggleGravityField()">Gravity Field</button>
             </div>
         </div>
     </nav>
@@ -529,6 +630,15 @@
                 <span id="typewriterText"></span>
             </div>
         </aside>
+    </div>
+
+    <!-- Planet Hover Tooltip -->
+    <div id="planet-tooltip">
+        <div class="tooltip-name"></div>
+        <div class="tooltip-row"><span class="tooltip-label">Distance</span><span class="tooltip-value" id="tt-distance"></span></div>
+        <div class="tooltip-row"><span class="tooltip-label">Orbit</span><span class="tooltip-value" id="tt-period"></span></div>
+        <div class="tooltip-row"><span class="tooltip-label">Moons</span><span class="tooltip-value" id="tt-moons"></span></div>
+        <div class="tooltip-type" id="tt-type"></div>
     </div>
 
     <!-- Chat Logo -->
@@ -573,6 +683,16 @@
         </div>
     </div>
 
+    <script>
+        function toggleGravityField() {
+            var btn = document.getElementById('gravityToggleBtn');
+            var isActive = btn.classList.toggle('active');
+            if (window.__gravityField) {
+                window.__gravityField.setVisible(isActive);
+                window.__gravityControls.visible = isActive;
+            }
+        }
+    </script>
     <script type="module" src="./main.js"></script>
     <script type="module">
         import { sendToSpaceAgent } from './space-agent.js';

@@ -11,6 +11,7 @@ import { GUI } from "https://cdn.skypack.dev/dat.gui"
 import { SolarSystem } from './solar_system.js';
 import { Satellite } from './satellite_class.js';
 import { Trail } from "./trail.js";
+import { GravityField } from './gravity_field.js';
 // import Chatbot from "./chatbot/index.js";
 import gsap from 'https://cdn.skypack.dev/gsap';
 // const root = createRoot(document.getElementById('chatbot-root'));
@@ -194,7 +195,11 @@ const main = async function () {
 	var arrowHelper = new THREE.ArrowHelper(satellite.vel.clone().normalize(), satellite.pos.clone(), satellite.vel.clone().length()/10, 0xff0000 );
 	scene.add( arrowHelper );
 
-	modeController.activateGalatic = function(){ 
+	const gravityField = new GravityField(scene, {
+		gridSize: 250, segments: 150, strength: 2.0, opacity: 0.7, yOffset: -1.0
+	});
+
+	modeController.activateGalatic = function(){
 		targetName = "";
 		gsap.to(camera.position, {
 			x: 24.375955763295476,
@@ -277,6 +282,19 @@ const main = async function () {
 	timeSettings.open()
 	timeSettings.add(timer, "time", 0, 1000, 0.01).name("time").listen()
 	timeSettings.add(timer, "vel", 0, 5, 0.01).name("velocity").listen()
+
+	const gravityControls = { visible: false, strength: 2.0, opacity: 0.7, gridSize: 250 };
+	window.__gravityField = gravityField;
+	window.__gravityControls = gravityControls;
+	const gravityFolder = gui.addFolder("Gravity Field");
+	gravityFolder.add(gravityControls, "visible").name("Show Field").onChange(v => {
+		gravityField.setVisible(v);
+		const btn = document.getElementById('gravityToggleBtn');
+		if (btn) btn.classList.toggle('active', v);
+	});
+	gravityFolder.add(gravityControls, "strength", 0.5, 10, 0.1).name("Well Depth").onChange(v => gravityField.setStrength(v));
+	gravityFolder.add(gravityControls, "opacity", 0.1, 1.0, 0.05).name("Opacity").onChange(v => { gravityField.material.opacity = v; });
+	gravityFolder.add(gravityControls, "gridSize", 40, 700, 10).name("Grid Size").onFinishChange(v => gravityField.setGridSize(v));
 
 	const satSettings = gui.addFolder("Controls");
 	satSettings.hide()
@@ -391,7 +409,7 @@ const main = async function () {
 				timer.simInitTime = timer.time
 
 
-				document.onmousemove = function(){};
+				document.onmousemove = function(){ hideTooltip(); };
 				document.onclick = function(){};
 				document.onwheel = function(){}
 
@@ -460,6 +478,10 @@ const main = async function () {
 		}
 		controls.update()
 
+		if (gravityControls.visible) {
+			gravityField.update(solarSystem.sun, solarSystem.planets);
+		}
+
 		labelRenderer.render(scene, camera);
 
 		composer.render();
@@ -482,6 +504,34 @@ const main = async function () {
 		composer.setSize(window.innerWidth, window.innerHeight);
 		labelRenderer.setSize(this.window.innerWidth, this.window.innerHeight)
 
+	}
+
+	const tooltip = document.getElementById('planet-tooltip');
+	const ttName = tooltip.querySelector('.tooltip-name');
+	const ttDistance = document.getElementById('tt-distance');
+	const ttPeriod = document.getElementById('tt-period');
+	const ttMoons = document.getElementById('tt-moons');
+	const ttType = document.getElementById('tt-type');
+
+	function showTooltip(body, x, y) {
+		if (body.stats) {
+			ttName.textContent = body.name;
+			ttDistance.textContent = body.stats.distance;
+			ttPeriod.textContent = body.stats.period;
+			ttMoons.textContent = body.stats.moons;
+			ttType.textContent = body.stats.type;
+
+			// Position with offset, keep on screen
+			const tx = Math.min(x + 18, window.innerWidth - 240);
+			const ty = Math.min(y + 18, window.innerHeight - 180);
+			tooltip.style.left = tx + 'px';
+			tooltip.style.top = ty + 'px';
+			tooltip.classList.add('visible');
+		}
+	}
+
+	function hideTooltip() {
+		tooltip.classList.remove('visible');
 	}
 
 	function onMouseMove(e){
@@ -516,8 +566,11 @@ const main = async function () {
 			closest.orbit.orbitLine.material.color.set(new THREE.Color(0xffffff));
 			closest.orbit.orbitLine.material.needsUpdate = true;
 			labelRenderer.domElement.style.color = 'white'
+			showTooltip(closest, e.clientX, e.clientY);
+		} else {
+			hideTooltip();
 		}
-		
+
 	}
 
 
