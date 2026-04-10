@@ -110,6 +110,13 @@
             box-shadow: 0 0 12px rgba(0, 206, 209, 0.5);
         }
 
+        #muteBtn.muted {
+            border-color: #ff6b6b;
+            color: #ff6b6b;
+            background: rgba(255, 107, 107, 0.15);
+            box-shadow: 0 0 10px rgba(255, 107, 107, 0.3);
+        }
+
         #gameCanvas {
             position: relative;
         }
@@ -608,6 +615,7 @@
                 <a href="#" onclick='document.getElementById("desc_box").hidden = ""'>Traveling the Orbits</a>
             </div>
             <div class="gravity-toggle">
+                <button id="muteBtn" onclick="toggleMute()">Mute</button>
                 <button id="gravityToggleBtn" onclick="toggleGravityField()">Gravity Field</button>
             </div>
         </div>
@@ -684,6 +692,24 @@
     </div>
 
     <script>
+        // ─── Mute toggle ───
+        window.__isMuted = false;
+
+        function toggleMute() {
+            window.__isMuted = !window.__isMuted;
+            var btn = document.getElementById('muteBtn');
+            if (window.__isMuted) {
+                btn.classList.add('muted');
+                btn.textContent = 'Unmute';
+                // Stop any currently playing speech
+                window.speechSynthesis.cancel();
+            } else {
+                btn.classList.remove('muted');
+                btn.textContent = 'Mute';
+            }
+        }
+
+        // ─── Gravity field toggle ───
         function toggleGravityField() {
             var btn = document.getElementById('gravityToggleBtn');
             var isActive = btn.classList.toggle('active');
@@ -694,10 +720,13 @@
         }
     </script>
     <script type="module" src="./main.js"></script>
+    <!-- Load space agent module — exposes sendToSpaceAgent globally for the chat -->
     <script type="module">
         import { sendToSpaceAgent } from './space-agent.js';
-
-        // Chat functionality
+        window.__sendToSpaceAgent = sendToSpaceAgent;
+    </script>
+    <!-- Chat UI handlers in a regular script so they work even if the module/CDN is slow -->
+    <script>
         document.addEventListener('DOMContentLoaded', function() {
             const chatContainer = document.getElementById('chatbot-container');
             const chatLogo = document.getElementById('chat-logo');
@@ -708,7 +737,7 @@
             const sendButton = document.getElementById('send-button');
 
             // Add pulse animation to chat logo
-            setTimeout(() => {
+            setTimeout(function() {
                 chatLogo.style.animation = "pulse 2s infinite";
             }, 3000);
 
@@ -734,28 +763,14 @@
 
             function updateExpandIcon() {
                 if (chatContainer.classList.contains('expanded')) {
-                    expandChatButton.innerHTML = `
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M4 14h6v6"></path>
-                            <path d="M20 10h-6V4"></path>
-                            <path d="M14 10l7-7"></path>
-                            <path d="M3 21l7-7"></path>
-                        </svg>
-                    `;
+                    expandChatButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14h6v6"></path><path d="M20 10h-6V4"></path><path d="M14 10l7-7"></path><path d="M3 21l7-7"></path></svg>';
                 } else {
-                    expandChatButton.innerHTML = `
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M15 3h6v6"></path>
-                            <path d="M9 21H3v-6"></path>
-                            <path d="M21 3l-7 7"></path>
-                            <path d="M3 21l7-7"></path>
-                        </svg>
-                    `;
+                    expandChatButton.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"></path><path d="M9 21H3v-6"></path><path d="M21 3l-7 7"></path><path d="M3 21l7-7"></path></svg>';
                 }
             }
 
-            function addMessage(content, isUser = false) {
-                const messageDiv = document.createElement('div');
+            function addMessage(content, isUser) {
+                var messageDiv = document.createElement('div');
                 messageDiv.className = isUser ? 'message user-message' : 'message bot-message';
                 messageDiv.textContent = content;
                 chatMessages.appendChild(messageDiv);
@@ -763,45 +778,46 @@
             }
 
             function showTypingIndicator() {
-                const indicator = document.createElement('div');
+                var indicator = document.createElement('div');
                 indicator.className = 'typing-indicator';
                 indicator.id = 'typing-indicator';
-                for (let i = 0; i < 3; i++) {
-                    const dot = document.createElement('span');
-                    indicator.appendChild(dot);
+                for (var i = 0; i < 3; i++) {
+                    indicator.appendChild(document.createElement('span'));
                 }
                 chatMessages.appendChild(indicator);
                 chatMessages.scrollTop = chatMessages.scrollHeight;
             }
 
             function removeTypingIndicator() {
-                const indicator = document.getElementById('typing-indicator');
-                if (indicator) {
-                    indicator.remove();
-                }
+                var indicator = document.getElementById('typing-indicator');
+                if (indicator) indicator.remove();
             }
 
-            async function handleSendMessage() {
-                const message = chatInput.value.trim();
-                if (message) {
-                    addMessage(message, true);
-                    chatInput.value = '';
+            function handleSendMessage() {
+                var message = chatInput.value.trim();
+                if (!message) return;
+                addMessage(message, true);
+                chatInput.value = '';
 
-                    showTypingIndicator();
+                if (!window.__sendToSpaceAgent) {
+                    addMessage("AI assistant is still loading. Please try again in a moment.");
+                    return;
+                }
 
-                    const response = await sendToSpaceAgent(message);
-
+                showTypingIndicator();
+                window.__sendToSpaceAgent(message).then(function(response) {
                     removeTypingIndicator();
                     addMessage(response);
-                }
+                }).catch(function() {
+                    removeTypingIndicator();
+                    addMessage("Something went wrong. Please try again.");
+                });
             }
 
             sendButton.addEventListener('click', handleSendMessage);
 
             chatInput.addEventListener('keypress', function(event) {
-                if (event.key === 'Enter') {
-                    handleSendMessage();
-                }
+                if (event.key === 'Enter') handleSendMessage();
             });
         });
     </script>
@@ -833,6 +849,9 @@
         // Single shared speech function — cancel safely, then speak after engine resets
         let __speechTimer = null;
         function speakText(text) {
+            // Skip speech entirely if muted
+            if (window.__isMuted) return;
+
             const synth = window.speechSynthesis;
 
             // Cancel any running speech + pending speech timer

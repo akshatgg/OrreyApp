@@ -28,7 +28,7 @@ An interactive 3D orbital mechanics simulator that allows users to explore space
 - **Orbital Mechanics Simulation**: Real-time physics calculations for realistic space travel
 - **Gravity Assist Maneuvers**: Pre-configured scenarios for complex space missions
 - **Gravitational Field Visualization**: Real-time spacetime curvature grid showing gravity wells around all celestial bodies
-- **AI Space Assistant**: Integrated chatbot powered by Groq/Gemini API for space-related questions
+- **AI Space Assistant with RAG**: Integrated chatbot powered by Groq/Gemini API, augmented with Retrieval-Augmented Generation from the "Orbital Mechanics for Engineering Students" textbook by Howard D. Curtis
 - **Dynamic Camera Controls**: Click and drag to adjust view, mouse wheel for zoom
 - **Time Controls**: Adjust simulation speed and time parameters
 - **Trail Visualization**: Track satellite and celestial body movements
@@ -40,7 +40,7 @@ An interactive 3D orbital mechanics simulator that allows users to explore space
 - **3D Graphics**: Three.js for 3D rendering and animations
 - **Animation**: GSAP (GreenSock) for smooth animations
 - **UI Controls**: dat.GUI for interactive parameter controls
-- **AI Integration**: Google Gemini API for chatbot functionality
+- **AI Integration**: Groq/Gemini API for chatbot with BM25-based RAG pipeline
 - **Build Tools**: Vite for development and building
 - **Server**: http-server for local development
 - **Containerization**: Docker and Docker Compose
@@ -131,15 +131,21 @@ OrreyApp/
 ├── 📄 trail.js                       # Orbital trail visualization
 ├── 📄 basic_orbit.js                 # Basic orbital mechanics
 ├── 📄 gravity_field.js               # Gravitational field visualization
-├── 📄 space-agent.js                 # AI space assistant (Groq/Gemini)
+├── 📄 space-agent.js                 # AI space assistant (Groq/Gemini + RAG)
 ├── 📄 vite.config.js                 # Vite build config with GitHub Pages base path
 ├── 📄 styles.css                     # Additional styling
-├── 📁 chatbot/                       # AI chatbot implementation
+├── 📁 rag/                           # RAG (Retrieval-Augmented Generation) system
+│   ├── 📄 preprocess.js              # PDF extraction & chunking script
+│   ├── 📄 retriever.js               # Client-side BM25 search engine
+│   └── 📄 knowledge-base.json        # Pre-computed textbook chunks (487 chunks)
+├── 📁 chatbot/                       # AI chatbot components
 │   ├── 📄 index.js                   # Chatbot main logic
 │   ├── 📄 chatbot.js                 # Core chatbot functionality
 │   ├── 📁 components/                # React-like chatbot components
 │   ├── 📁 hooks/                     # Custom hooks for API integration
 │   └── 📁 styles/                    # Chatbot-specific styles
+├── 📁 Papers/                        # Reference textbooks and reports
+│   └── 📄 Curtis_OrbitamMech...pdf   # Source textbook for RAG knowledge base
 ├── 📁 resources/                     # Static assets and resources
 ├── 📄 package.json                   # Node.js dependencies and scripts
 ├── 📄 Dockerfile                     # Docker configuration
@@ -174,6 +180,69 @@ OrreyApp/
 - **Chat Icon**: Click the floating chat button (bottom-right) to open the space assistant
 - **Ask Questions**: Get help with orbital mechanics, space exploration, or simulator usage
 - **Expand Chat**: Use the expand button for a larger chat interface
+
+## 🧠 RAG (Retrieval-Augmented Generation)
+
+The AI assistant uses a RAG pipeline to ground its answers in the "Orbital Mechanics for Engineering Students" textbook by Howard D. Curtis, rather than relying solely on the LLM's training data.
+
+### How It Works
+
+```
+User asks: "What is a Hohmann transfer?"
+      |
+      v
+1. RETRIEVE  -->  BM25 searches 487 pre-indexed textbook chunks
+                  --> Finds Chapter 6 "Hohmann Transfer" (score: 12.04)
+      |
+      v
+2. AUGMENT   -->  Top 4 relevant chunks appended to the LLM prompt
+                  as TEXTBOOK CONTEXT
+      |
+      v
+3. GENERATE  -->  Groq/Gemini answers grounded in the actual textbook
+```
+
+### Architecture
+
+| Component | File | Purpose |
+|-----------|------|---------|
+| Preprocessor | `rag/preprocess.js` | One-time script: extracts PDF, chunks by section, computes BM25 index |
+| Knowledge Base | `rag/knowledge-base.json` | 487 chunks with term frequencies, covering all 11 chapters |
+| Retriever | `rag/retriever.js` | Client-side BM25 search with title boosting and deduplication |
+| Integration | `space-agent.js` | Retrieves context before every LLM call, augments the prompt |
+
+### Textbook Coverage
+
+| Chapters | Topic |
+|----------|-------|
+| 1-2 | Dynamics of Point Masses, The Two-Body Problem |
+| 3-4 | Orbital Position as a Function of Time, Orbits in Three Dimensions |
+| 5-6 | Preliminary Orbit Determination, Orbital Maneuvers |
+| 7-8 | Relative Motion and Rendezvous, Interplanetary Trajectories |
+| 9-11 | Rigid-Body Dynamics, Satellite Attitude Dynamics, Rocket Vehicle Dynamics |
+
+### Knowledge Base Stats
+
+| Metric | Value |
+|--------|-------|
+| Total chunks | 487 |
+| Avg chunk length | 249 tokens |
+| Vocabulary size | 8,057 terms |
+| File size (raw) | 2.57 MB |
+| File size (gzipped) | 588 KB |
+| Retrieval algorithm | BM25 (K1=1.5, B=0.75) |
+
+### Regenerating the Knowledge Base
+
+If the source PDF is updated, regenerate the knowledge base:
+
+```bash
+# Requires poppler (pdftotext)
+# macOS: brew install poppler
+# Linux: apt-get install poppler-utils
+
+node rag/preprocess.js
+```
 
 ## 🌐 Gravitational Field Visualization
 
@@ -351,16 +420,30 @@ To improve or update the documentation:
 ## 🔧 Configuration
 
 ### API Keys
-The project uses Google's Gemini API for the chatbot. For production use:
-1. Obtain a Gemini API key from Google AI Studio
-2. Replace the API key in `index.html` (line 559)
-3. **Important**: For production, move API key to backend for security
+The project uses Groq (default) or Google Gemini for the AI chatbot. Configure via `.env`:
+
+```bash
+# Copy the example and fill in your keys
+cp .env.example .env
+```
+
+| Variable | Description |
+|----------|-------------|
+| `VITE_GROQ_API_KEY` | Groq API key (get from [console.groq.com](https://console.groq.com)) |
+| `VITE_GROQ_MODEL` | Groq model name (default: `openai/gpt-oss-120b`) |
+| `VITE_GEMINI_API_KEY` | Google Gemini API key (get from [Google AI Studio](https://aistudio.google.com/)) |
+| `VITE_AI_PROVIDER` | Which provider to use: `groq` or `gemini` |
+
+To switch providers, change `AI_PROVIDER` in `space-agent.js` or set `VITE_AI_PROVIDER` in `.env`.
+
+**Important**: For production, move API keys to a backend proxy for security.
 
 ### Customization
 - **Modify orbital parameters** in `satellite_class.js`
 - **Add new celestial bodies** in `solar_system.js`
 - **Customize UI appearance** in `index.html` styles section
 - **Adjust physics calculations** in relevant JavaScript files
+- **Update RAG knowledge base** by replacing the PDF in `Papers/` and running `node rag/preprocess.js`
 
 ## 🐳 Docker Details
 
@@ -419,8 +502,10 @@ This project is open source. Please check the repository for license details.
 ### Common Issues
 1. **Port 8051 already in use**: Change port in `package.json` and `Dockerfile`
 2. **Dependencies not installing**: Delete `node_modules` and run `npm install` again
-3. **Chatbot not responding**: Check API key configuration and network connectivity
+3. **Chatbot not responding**: Check API key configuration in `.env` and network connectivity
 4. **Docker issues**: Ensure Docker is running and you have sufficient permissions
+5. **RAG not working**: Check browser console for `[RAG] Loaded 487 chunks` message. If missing, verify `rag/knowledge-base.json` exists
+6. **Regenerating knowledge base fails**: Install poppler (`brew install poppler` on macOS) and ensure the PDF exists in `Papers/`
 
 ### Getting Help
 - Check the browser console for error messages

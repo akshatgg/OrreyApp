@@ -1,7 +1,13 @@
 /**
  * Space Agent - A bounded AI assistant for the Orrery Solar System Simulator
  * Supports both Groq and Gemini. Includes client-side guardrails.
+ * Uses RAG (Retrieval-Augmented Generation) from Curtis "Orbital Mechanics" textbook.
  */
+
+import { initRetriever, retrieve, formatContext, isReady as isRAGReady } from './rag/retriever.js';
+
+// ─── Initialize RAG on load ─────────────────────────────────────
+initRetriever();
 
 // ─── PROVIDER CONFIG ────────────────────────────────────────────
 const AI_PROVIDER = "groq"; // "groq" or "gemini"
@@ -21,7 +27,7 @@ let offTopicStrikes = 0;
 const MAX_STRIKES = 3;
 
 // ─── SYSTEM PROMPT (lean — no facts the LLM already knows) ─────
-const SYSTEM_PROMPT = `You are Cosmic Guide, an AI assistant embedded in the "Travelling The Orbits" 3D solar system simulator.
+const SYSTEM_PROMPT = `You are Cosmic Guide, an AI assistant embedded in the "Travelling The Orbits" 3D solar system simulator. You are powered by a knowledge base from "Orbital Mechanics for Engineering Students" by Howard D. Curtis.
 
 TOPIC BOUNDARY (STRICT):
 You may ONLY discuss: the solar system, planets, moons, asteroids, comets, orbital mechanics, satellites, spacecraft, space exploration, astrophysics, astronomy, and how to use THIS simulator.
@@ -41,11 +47,14 @@ Two modes:
 1. Default  2. Pass By Jupiter  3. GA on Saturn  4. Crash with Mars
 5. Crash with Mercury  6. GA on Uranus  7. Double GA  8. Crash with Saturn  9. GA on Ceres
 
+RAG INSTRUCTIONS:
+When TEXTBOOK CONTEXT is provided below the user's message, use it to give accurate, grounded answers. Prioritize the textbook content for orbital mechanics topics. Cite the chapter/section naturally (e.g., "According to the orbital mechanics textbook..." or "As explained in the chapter on orbital maneuvers..."). If the context does not cover the user's question, answer from your own knowledge but do not fabricate textbook references.
+
 RESPONSE STYLE:
 - 2-4 short paragraphs max. Plain text only — no markdown (no **, ##, \`\`\`).
 - Simple language for students and space enthusiasts.
 - Reference simulator features when relevant ("Try the GA on Saturn preset!").
-- Use your own knowledge for planet facts, orbital mechanics, space history — no need to be told.
+- When textbook context is available, weave it naturally into your answer.
 `;
 
 const OFFTOPIC_REPLY = "I'm Cosmic Guide — I can only help with space, the solar system, and this simulator. Try asking about a planet, a mission, or how to use the controls!";
@@ -156,7 +165,7 @@ function sanitizeOutput(text) {
 }
 
 // ─── GROQ API CALL ──────────────────────────────────────────────
-async function callGroq(userMessage) {
+async function callGroq(userMessage, ragContext) {
     const messages = [
         { role: "system", content: SYSTEM_PROMPT }
     ];
@@ -168,7 +177,13 @@ async function callGroq(userMessage) {
         });
     }
 
-    messages.push({ role: "user", content: userMessage });
+    // Augment user message with retrieved textbook context
+    let augmentedMessage = userMessage;
+    if (ragContext) {
+        augmentedMessage = `${userMessage}\n\n--- TEXTBOOK CONTEXT (from "Orbital Mechanics for Engineering Students" by Curtis) ---\n${ragContext}`;
+    }
+
+    messages.push({ role: "user", content: augmentedMessage });
 
     const response = await fetch(GROQ_API_URL, {
         method: 'POST',
@@ -202,7 +217,7 @@ async function callGroq(userMessage) {
 }
 
 // ─── GEMINI API CALL ────────────────────────────────────────────
-async function callGemini(userMessage) {
+async function callGemini(userMessage, ragContext) {
     const contents = [];
 
     for (const msg of conversationHistory) {
@@ -212,7 +227,13 @@ async function callGemini(userMessage) {
         });
     }
 
-    contents.push({ role: "user", parts: [{ text: userMessage }] });
+    // Augment user message with retrieved textbook context
+    let augmentedMessage = userMessage;
+    if (ragContext) {
+        augmentedMessage = `${userMessage}\n\n--- TEXTBOOK CONTEXT (from "Orbital Mechanics for Engineering Students" by Curtis) ---\n${ragContext}`;
+    }
+
+    contents.push({ role: "user", parts: [{ text: augmentedMessage }] });
 
     const response = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
         method: 'POST',
@@ -265,12 +286,22 @@ export async function sendToSpaceAgent(userMessage) {
     offTopicStrikes = 0;
 
     try {
+        // ── RAG: Retrieve relevant textbook context ──
+        let ragContext = null;
+        if (isRAGReady()) {
+            const chunks = retrieve(userMessage, 4);
+            if (chunks.length > 0) {
+                ragContext = formatContext(chunks);
+                console.log(`[RAG] Retrieved ${chunks.length} chunks (top score: ${chunks[0].score.toFixed(2)})`);
+            }
+        }
+
         let result;
 
         if (AI_PROVIDER === "groq") {
-            result = await callGroq(userMessage);
+            result = await callGroq(userMessage, ragContext);
         } else {
-            result = await callGemini(userMessage);
+            result = await callGemini(userMessage, ragContext);
         }
 
         if (result.error) {
