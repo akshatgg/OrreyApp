@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <title>Traveling the Orbits</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@700&family=Inter:wght@400;500;600&display=swap');
 
         body {
             margin: 0;
@@ -138,12 +138,26 @@
             width: 25%;
             margin: 2%;
             margin-top: 5%;
-            padding: 5px;
-            background-color: rgba(0, 0, 0, 0.6);
-            color: whitesmoke;
+            padding: 20px 24px 22px;
+            background: linear-gradient(135deg, rgba(20, 20, 35, 0.85), rgba(0, 0, 0, 0.7));
+            color: #e8e8ec;
             position: absolute;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            text-align: left;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+        }
+
+        .description h2 {
             font-family: 'Space Mono', monospace;
-            text-align: justify;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 2.5px;
+            color: rgba(255, 255, 255, 0.55);
+            margin: 0;
         }
 
         #div2 {
@@ -191,20 +205,47 @@
         }
 
         .targer {
-            margin-top: 3px;
-            margin-bottom: 3px;
-            text-decoration: underline;
+            margin: 0;
+            font-family: 'Space Mono', monospace;
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: #ffd479;
+            letter-spacing: 0.8px;
+            text-decoration: none;
         }
 
         .cont {
             display: flex;
             align-items: center;
+            padding-bottom: 10px;
+            margin-bottom: 14px;
+            border-bottom: 1px solid rgba(255, 212, 121, 0.2);
         }
 
         .cont span {
             margin-left: 10px;
             margin-right: 10px;
             visibility: hidden;
+        }
+
+        #typewriterText {
+            display: block;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            font-size: 1.15rem;
+            font-weight: 400;
+            line-height: 1.7;
+            color: #ececf2;
+            letter-spacing: 0.15px;
+        }
+
+        .description.planet-mode #title_box h2 {
+            display: none;
+        }
+
+        .description.planet-mode #title_box {
+            justify-content: flex-end;
+            margin-bottom: 0;
+            padding: 0;
         }
 
         /* Chat Logo Styles */
