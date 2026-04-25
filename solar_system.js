@@ -155,9 +155,5 @@ export class SolarSystem {
         for (let i = 0; i < this.planets.length; i++) {
             this.planets[i].movePlanet(time);
         }
-    } 
+    }
 }
-
-
-
-typewriterText

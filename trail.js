@@ -1,4 +1,4 @@
-import * as THREE from "https://cdn.skypack.dev/three@0.129.0/build/three.module.js";
+import * as THREE from "three";
 
 export class Trail {
     constructor(scene, size, color) {
